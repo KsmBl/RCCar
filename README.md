@@ -17,3 +17,4 @@ ELRS TX to USB to controll the car via the Laptop instead of an remote controll
 Barometer for height calculation  
 Kompas for better direction input and slightly better vibration absorbition  
 3D visualisation of driven Track  
+flywheel for better curve performace
