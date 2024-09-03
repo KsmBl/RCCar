@@ -1,22 +1,32 @@
 #! /usr/bin/python
 
-import RPi.GPIO as GPIO
-from time import sleep
-
-#import ELRS lib
+from getInputs import getInputs # local file
+from setSpeed import setSpeed # local file
+from setSteer import setSteer # local file
+from PIDloop import PIDloop # local file
+from alert import alert # local file
+import time
 
 def main():
-	while (True):
-		setMotorSpeed(1500) #ELRS Axis 1
-		setSteer(1600) #ELRS Axis 3
-		if GPIO.input(8) == GPIO.HIGH:
-			print("Button was pushed!")
+	PIDs = [1, 1, 1]
+	PIDresult = 0
+	while True:
+		Axis = []
+		Axis = getInputs()
 
-def setMotorSpeed(speed):
-	pwm = speed - 1000
-	print(f"Set Motor PWM to {pwm}") #set PWM
+		rt = setSpeed(Axis[0])
+		if rt:
+			print(rt)
+			alert(8)
 
-def setSteer(angle):
-	print(f"Set Steer angle to {angle}") #set PWM
+		rt = setSteer(Axis[1], PIDresult)
+		if rt:
+			print(rt)
+			alert(10)
+
+		#if accelerometer is available
+		PIDresult = PIDloop(PIDs)
+
+		time.sleep(0.2)
 
 main()
