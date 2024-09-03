@@ -12,6 +12,6 @@ def setMotorSpeed(speed):
 	print(f"Set Motor Speed to {speed}") #set PWM
 
 def setSteer(angle):
-	print(f"Set Steer angle to {angle}") #set PWM
+	print(f"Set Steer angle to {angle} AAA") #set PWM
 
 main()
