@@ -5,11 +5,11 @@
 
 def main():
 	while (True):
-		setMotorSpeed(5) #ELRS Axis 1
-		setSteer(-3) #ELRS Axis 3
+		setMotorSpeed(1500) #ELRS Axis 1
+		setSteer(1600) #ELRS Axis 3
 
 def setMotorSpeed(speed):
-	print(f"Set Motor Speed to {speed}") #set PWM
+	print(f"Set Motor Speed to {speed} AA") #set PWM
 
 def setSteer(angle):
 	print(f"Set Steer angle to {angle}") #set PWM
