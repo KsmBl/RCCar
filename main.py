@@ -1,4 +1,8 @@
 #! /usr/bin/python
+import sys
+sys.path.insert(0, './libary')
+sys.path.insert(0, './libary/ADS1x15')
+sys.dont_write_bytecode = True ##TODO: remove before prod
 
 from getInputs import getInputs # local file
 from setSpeed import setSpeed # local file

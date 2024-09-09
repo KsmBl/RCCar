@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, './libary')
+
 from getInputs import getInputs # local file
 from setSpeed import setSpeed # local file
 from setSteer import setSteer # local file
