@@ -126,16 +126,6 @@ class ADS1x15:
         self._config = (self._config & 0xF1FF) | gainRegister
         self.writeRegister(self.CONFIG_REG, self._config)
 
-    def getGain(self) :
-        "Get programmable gain amplifier configuration"
-        gainRegister = self._config & 0x0E00
-        if gainRegister == 0x0200 : return self.PGA_4_096V
-        elif gainRegister == 0x0400 : return self.PGA_2_048V
-        elif gainRegister == 0x0600 : return self.PGA_1_024V
-        elif gainRegister == 0x0800 : return self.PGA_0_512V
-        elif gainRegister == 0x0A00 : return self.PGA_0_256V
-        else : return 0x0000
-
     def isReady(self) :
         "Check if device currently not performing conversion"
         value = self.readRegister(self.CONFIG_REG)
@@ -177,6 +167,46 @@ class ADS1x15:
         self.requestADC(pin)
         return self._getADC()
 
+class ADS1015(ADS1x15) :
+    "ADS1015 class derifed from general ADS1x15 class"
+
+    def __init__(self, busId: int, address: int = I2C_address) :
+        "Initialize ADS1015 with SMBus ID and I2C address configuration"
+        self.i2c = SMBus(busId)
+        self._address = address
+        self._conversionDelay = 2
+        self._maxPorts = 4
+        self._adcBits = 12
+        # Store initial config resgister to config property
+        self._config = self.readRegister(self.CONFIG_REG)
+
+    def requestADC_Differential_0_3(self) :
+        "Request single-shot conversion between pin 0 and pin 3"
+        self._requestADC(1)
+
+    def readADC_Differential_0_3(self) :
+        "Get ADC value between pin 0 and pin 3"
+        self.requestADC_Differential_0_3()
+        return self._getADC()
+
+    def requestADC_Differential_1_3(self) :
+        "Request single-shot conversion between pin 1 and pin 3"
+        self._requestADC(2)
+
+    def readADC_Differential_1_3(self) :
+        "Get ADC value between pin 1 and pin 3"
+        self.requestADC_Differential_1_3()
+        return self._getADC()
+
+    def requestADC_Differential_2_3(self) :
+        "Request single-shot conversion between pin 2 and pin 3"
+        self._requestADC(3)
+
+    def readADC_Differential_2_3(self) :
+        "Get ADC value between pin 2 and pin 3"
+        self.requestADC_Differential_2_3()
+        return self._getADC()
+
 class ADS1115(ADS1x15) :
     "ADS1115 class derifed from general ADS1x15 class"
 
@@ -189,3 +219,30 @@ class ADS1115(ADS1x15) :
         self._adcBits = 16
         # Store initial config resgister to config property
         self._config = self.readRegister(self.CONFIG_REG)
+
+    def requestADC_Differential_0_3(self) :
+        "Request single-shot conversion between pin 0 and pin 3"
+        self._requestADC(1)
+
+    def readADC_Differential_0_3(self) :
+        "Get ADC value between pin 0 and pin 3"
+        self.requestADC_Differential_0_3()
+        return self._getADC()
+
+    def requestADC_Differential_1_3(self) :
+        "Request single-shot conversion between pin 1 and pin 3"
+        self._requestADC(2)
+
+    def readADC_Differential_1_3(self) :
+        "Get ADC value between pin 1 and pin 3"
+        self.requestADC_Differential_1_3()
+        return self._getADC()
+
+    def requestADC_Differential_2_3(self) :
+        "Request single-shot conversion between pin 2 and pin 3"
+        self._requestADC(3)
+
+    def readADC_Differential_2_3(self) :
+        "Get ADC value between pin 2 and pin 3"
+        self.requestADC_Differential_2_3()
+        return self._getADC()
