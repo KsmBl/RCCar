@@ -16,15 +16,15 @@ def main():
 	PIDs = [1, 1, 1]
 	PIDresult = 0
 
-	ADS_f = setInputs()
+	ADS = setInputs()
 
 	while True:
 		Axis = []
-		Axis = getInputs(ADS_f[0])
-		#Axis = [ADS.readADC(0), ADS.readADC(1), ADS.readADC(2), ADS.readADC(3)]
+		Axis = getInputs(ADS)
 		
 		print(f"Analog0: {Axis[0]}")
-		print(f"Analog0: {Axis[1]}")
+		print(f"Analog1: {Axis[1]}")
+		print("___________________")
 
 #		rt = setSpeed(Axis[0])
 #		if rt:
