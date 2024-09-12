@@ -9,6 +9,7 @@ from setSpeed import setSpeed # local file
 from setSteer import setSteer # local file
 from PIDloop import PIDloop # local file
 from alert import alert # local file
+import ADS1x15
 import time
 
 def main():
