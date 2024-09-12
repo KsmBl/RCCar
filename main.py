@@ -4,10 +4,10 @@ sys.path.insert(0, './libary')
 sys.path.insert(0, './libary/ADS1x15')
 sys.dont_write_bytecode = True ##TODO: remove before prod
 
+from getInputs import setInputSettings, getInputs # local file
 from setSpeed import setSpeed # local file
 from setSteer import setSteer # local file
 from PIDloop import PIDloop # local file
-from getInputs import setInputSettings, getInputs # local file
 from alert import alert # local file
 import ADS1x15
 import time
@@ -17,11 +17,11 @@ def main():
 	PIDresult = 0
 
 	#Analog-Digital-Settings
-	ADS = setInputSettings()
+	ADSettings = setInputSettings()
 
 	while True:
 		Axis = []
-		Axis = getInputs(ADS)
+		Axis = getInputs(ADSettings)
 		
 		print(f"Analog0: {Axis[0]}")
 		print(f"Analog1: {Axis[1]}")
@@ -43,6 +43,6 @@ def main():
 #		PIDresult = PIDloop(PIDs)
 
 
-		time.sleep(0.2)
+		time.sleep(0.05)
 
 main()
