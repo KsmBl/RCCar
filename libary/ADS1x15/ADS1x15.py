@@ -81,7 +81,7 @@ class ADS1x15:
     _maxPorts = 4
 
     # Default conversion lengths
-    _adcBits = 16
+    _adcBits = 12
 
     def __init__(self, busId: int, address: int = I2C_address) :
         "Constructor with SMBus ID and I2C address input"
