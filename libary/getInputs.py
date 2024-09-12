@@ -3,7 +3,7 @@ sys.path.insert(0, './libary')
 sys.path.insert(0, './libary/ADS1x15')
 import ADS1x15
 
-def setInputs():
+def setInputSettings():
 	ADS = ADS1x15.ADS1015(1, 0x48)
 	ADS.setGain(ADS.PGA_6_144V)
 	return ADS
