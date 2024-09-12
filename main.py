@@ -15,6 +15,11 @@ import time
 def main():
 	PIDs = [1, 1, 1]
 	PIDresult = 0
+
+	ADS = ADS1x15.ADS1015(1, 0x48)
+	ADS.setGain(ADS.PGA_6_144V)
+	f = ADS.toVoltage()
+
 	while True:
 		Axis = []
 		Axis = getInputs()
@@ -31,6 +36,13 @@ def main():
 
 		#if accelerometer is available
 		PIDresult = PIDloop(PIDs)
+
+
+		val_0 = ADS.readADC(0)
+		val_1 = ADS.readADC(1)
+
+		print("Analog0: {0:d}\t{1:.3f} V".format(val_0, val_0 * f))
+		print("Analog1: {0:d}\t{1:.3f} V".format(val_1, val_1 * f))
 
 		time.sleep(0.2)
 
