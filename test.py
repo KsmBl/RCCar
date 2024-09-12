@@ -1,11 +1,13 @@
 import sys
 sys.path.insert(0, './libary')
+sys.path.insert(0, './libary/ADS1x15')
 
-from getInputs import getInputs # local file
 from setSpeed import setSpeed # local file
 from setSteer import setSteer # local file
 from PIDloop import PIDloop # local file
+#from getInputs import * # local file
 from alert import alert # local file
+#import ADS1x15
 
 
 def main():
@@ -55,15 +57,16 @@ def main():
 		rtvalue = 1
 
 	### get Inputs ###
-	rt = getInputs()
+#	setInputs()
+#	rt = getInputs()
 
-	for i in rt:
-		if i > 2020:
-			print(f"one value from getInput() is higher than 2020: {i}")
-			rtvalue = 1
-		elif i < 980:
-			print(f"one value from getInput() is lower than 980: {i}")
-			rtvalue = 1
+#	for i in rt:
+#		if i > 2020:
+#			print(f"one value from getInput() is higher than 2020: {i}")
+#			rtvalue = 1
+#		elif i < 980:
+#			print(f"one value from getInput() is lower than 980: {i}")
+#			rtvalue = 1
 
 	return rtvalue
 

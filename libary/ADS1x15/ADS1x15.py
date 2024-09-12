@@ -167,6 +167,20 @@ class ADS1x15:
         self.requestADC(pin)
         return self._getADC()
 
+    def getMaxVoltage(self) -> float :
+        "Get maximum voltage conversion range"
+        if self._config & 0x0E00 == 0x0000 : return 6.144
+        elif self._config & 0x0E00 == 0x0200 : return 4.096
+        elif self._config & 0x0E00 == 0x0400 : return 2.048
+        elif self._config & 0x0E00 == 0x0600 : return 1.024
+        elif self._config & 0x0E00 == 0x0800 : return 0.512
+        else : return 0.256
+
+    def toVoltage(self, value: int = 1) -> float :
+        "Transform an ADC value to nominal voltage"
+        volts = self.getMaxVoltage() * value
+        return volts / ((2 ** (self._adcBits - 1)) - 1)
+
 class ADS1015(ADS1x15) :
     "ADS1015 class derifed from general ADS1x15 class"
 
