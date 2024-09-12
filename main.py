@@ -25,6 +25,8 @@ def main():
 		
 		print(f"Analog0: {Axis[0]}")
 		print(f"Analog1: {Axis[1]}")
+		print(f"Analog2: {Axis[2]}")
+		print(f"Analog3: {Axis[3]}")
 		print("___________________")
 
 #		rt = setSpeed(Axis[0])
