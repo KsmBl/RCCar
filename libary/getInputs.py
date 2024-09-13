@@ -1,3 +1,7 @@
+import time
+import json
+import os
+
 def setInputSettings():
 	import sys
 	sys.path.insert(0, './libary')
@@ -7,6 +11,47 @@ def setInputSettings():
 	ADS = ADS1x15.ADS1015(1, 0x48)
 	ADS.setGain(ADS.PGA_6_144V)
 	return ADS
+
+def startInputScanner(ADS):
+	pid = os.fork()
+	if pid == 0:
+		_startInputScanner(ADS)
+	else:
+		return
+
+def _startInputScanner(ADS):
+	ticklengthAverage = 8
+	timer = 0 #0 ticks
+	Axis = {}
+	while True:
+		newAxis = readInputs(ADS)
+		Axis[timer] = newAxis
+		if timer - ticklengthAverage in Axis:
+			del Axis[timer - ticklengthAverage]
+
+		timer += 1
+
+		#calculate average of last 20 ticks
+		averageAxis0 = 0
+		averageAxis1 = 0
+		averageAxis2 = 0
+		averageAxis3 = 0
+
+		for i in Axis:
+			averageAxis0 += Axis[i][0]
+			averageAxis1 += Axis[i][1]
+			averageAxis2 += Axis[i][2]
+			averageAxis3 += Axis[i][3]
+
+		averageAxis0 = averageAxis0 / ticklengthAverage
+		averageAxis1 = averageAxis1 / ticklengthAverage
+		averageAxis2 = averageAxis2 / ticklengthAverage
+		averageAxis3 = averageAxis3 / ticklengthAverage
+
+		allAverageAxis = [int(averageAxis0), int(averageAxis1), int(averageAxis2), int(averageAxis3)]
+
+		with open('Axis.txt', 'w') as fp:
+			json.dump(allAverageAxis, fp)
 
 #should return values between 1000 and 2000
 def readInputs(ADS):
@@ -23,25 +68,13 @@ def readInputs(ADS):
 
 def getInputs(ADS, axisValues = False):
 	if not axisValues:
-		axisValues = readInputs(ADS)
+		with open('Axis.txt', 'r') as fp:
+			content = fp.read()
+		
+		cleaned_content = content.strip('[]')
+		axisValues = [(item) for item in cleaned_content.split(',')]
 
-	return axisValues
+		return axisValues
+	else:
+		return axisValues
 
-	'''
-	i = 0
-	while i <= 3: # 3 = 4 channels (0, 1, 2, 3)
-		#set value to 0 when its out of tolerance range
-		if axisValues[i] < 980:
-			axisValues[i] = 0
-		elif axisValues[i] > 2020:
-			axisValues[i] = 0
-
-		#set value to 0 when its in the tolerance range
-		elif axisValues[i] < 1000:
-			axisValues[i] = 1000
-		elif axisValues[i] > 2000:
-			axisValues[i] = 2000
-
-
-		i += 1
-	'''
