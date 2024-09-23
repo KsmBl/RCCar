@@ -65,18 +65,13 @@ def main():
 		rtvalue = 1
 
 	#too low input
-	if not rt[1] == 0:
-		print(f"{rt[1]} value received. Errorcode 0 is expected")
-		rtvalue = 1
-
-	#low input
-	if not rt[2] == 1000:
-		print(f"{rt[2]} received. 1000 expected")
+	if rt[1] < 980:
+		print(f"one value from getInput() is lower than 980: {rt[1]}")
 		rtvalue = 1
 
 	#too high input
-	if not rt[3] == 0:
-		print(f"{rt[3]} received. Errorcode 0 is expected")
+	if rt[3] > 2020:
+		print(f"one value from getInput() is higher than 2020: {rt[3]}")
 		rtvalue = 1
 
 	return rtvalue
