@@ -11,8 +11,8 @@ from setSpeed import setSpeed # local file
 from setSteer import setSteer # local file
 from PIDloop import PIDloop # local file
 from alert import alert # local file
+from log import createLogfile, log # local file
 import ADS1x15
-
 
 def main():
 	PIDs = [1, 1, 1]
@@ -40,19 +40,12 @@ def main():
 			print(f"Digital0: {Axis[3]}")
 			print("___________________")
 
-			rt = setSpeed(Axis[2])
-			if rt:
-				print(rt)
-#				alert(8)
+#			rt = setSpeed(Axis[2])
+#			if rt:
+#				print(rt)
 
-#		rt = setSteer(Axis[1], PIDresult)
-#		if rt:
-#			print(rt)
-#			alert(10)
-
-		#if accelerometer is available
+#		#if accelerometer is available
 #		PIDresult = PIDloop(PIDs)
-
 
 		time.sleep(0.05)
 
