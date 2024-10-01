@@ -3,14 +3,14 @@ import json
 import os
 
 ##config
-ANALOG_0_MIN = 68
-ANALOG_0_MAX = 1095
-ANALOG_1_MIN = 111
-ANALOG_1_MAX = 1093
-ANALOG_2_MIN = 3
-ANALOG_2_MAX = 1093
-DIGITAL_0_MIN = 1566
-DIGITAL_0_MAX = 1585
+ANALOG_0_MIN = 0
+ANALOG_0_MAX = 0
+DIGITAL_0_MIN = 0
+DIGITAL_0_MAX = 0
+ANALOG_2_MIN = 0
+ANALOG_2_MAX = 0
+DIGITAL_1_MIN = 0
+DIGITAL_1_MAX = 0
 
 inputErrorTicks = 0
 MAX_INPUT_ERROR_TICKS = 3
@@ -81,7 +81,7 @@ def readInputs(ADS):
 
 	return [axis0, axis1, axis2, axis3]
 
-def getInputs(ADS, axisValues = False):
+def getInputs(ADS, axisValues = False, mode = "normal"):
 	if not axisValues:
 		with open('Axis.txt', 'r') as fp:
 			content = fp.read()
@@ -107,32 +107,30 @@ def getInputs(ADS, axisValues = False):
 	axis3 = int(axisValues[3])
 
 	#clean Inputs
-	if axis0 <= ANALOG_0_MIN:
-		axis0 = ANALOG_0_MIN
-	elif axis0 >= ANALOG_0_MAX:
-		axis0 = ANALOG_0_MAX
-	axis0 = (axis0 - ANALOG_0_MIN) / (ANALOG_0_MAX - ANALOG_0_MIN) * 1000 + 1000
+#	if axis0 <= ANALOG_0_MIN:
+#		axis0 = ANALOG_0_MIN
+#	elif axis0 >= ANALOG_0_MAX:
+#		axis0 = ANALOG_0_MAX
+#	axis0 = (axis0 - ANALOG_0_MIN) / (ANALOG_0_MAX - ANALOG_0_MIN) * 1000 + 1000
 
-	if axis1 <= ANALOG_1_MIN:
-		axis1 = ANALOG_1_MIN
-	elif axis1 >= ANALOG_1_MAX:
-		axis1 = ANALOG_1_MAX
-	axis1 = (axis1 - ANALOG_1_MIN) / (ANALOG_1_MAX - ANALOG_1_MIN) * 1000 + 1000
+#	if axis1 <= DIGITAL_0_MIN:
+#		axis1 = DIGITAL_0_MIN
+#	elif axis1 >= DIGITAL_0_MAX:
+#		axis1 = DIGITAL_0_MAX
+#	axis1 = (axis1 - DIGITAL_0_MIN) / (DIGITAL_0_MAX - DIGITAL_0_MIN) * 1000 + 1000
 
 
-	if axis2 <= ANALOG_2_MIN:
-		axis2 = ANALOG_2_MIN
-	elif axis2 >= ANALOG_2_MAX:
-		axis2 = ANALOG_2_MAX
-	axis2 = (axis2 - ANALOG_2_MIN) / (ANALOG_2_MAX - ANALOG_2_MIN) * 1000 + 1000
+#	if axis2 <= ANALOG_2_MIN:
+#		axis2 = ANALOG_2_MIN
+#	elif axis2 >= ANALOG_2_MAX:
+#		axis2 = ANALOG_2_MAX
+#	axis2 = (axis2 - ANALOG_2_MIN) / (ANALOG_2_MAX - ANALOG_2_MIN) * 1000 + 1000
 
-	if axis3 <= DIGITAL_0_MIN:
-		axis3 = DIGITAL_0_MIN
-	elif axis3 >= DIGITAL_0_MAX:
-		axis3 = DIGITAL_0_MAX
-	axis3 = (axis3 - DIGITAL_0_MIN) / (DIGITAL_0_MAX - DIGITAL_0_MIN) * 1000 + 1000
-
-	axisValues = [int(axis0), int(axis1), int(axis2), int(axis3)]
+#	if axis3 <= DIGITAL_1_MIN:
+#		axis3 = DIGITAL_1_MIN
+#	elif axis3 >= DIGITAL_0_MAX:
+#		axis3 = DIGITAL_0_MAX
+#	axis3 = (axis3 - DIGITAL_1_MIN) / (DIGITAL_0_MAX - DIGITAL_1_MIN) * 1000 + 1000
+#	axisValues = [int(axis0), int(axis1), int(axis2), int(axis3)]
 
 	return axisValues
-
