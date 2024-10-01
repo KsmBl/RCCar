@@ -55,7 +55,7 @@ def main():
 		rtvalue = 1
 
 	### get Inputs ###
-	rt = getInputs(None, [1500, 900, 999, 2100])
+	#rt = getInputs(None, [1500, 900, 999, 2100])
 	#valid Input
 	if rt[0] > 2020:
 		print(f"one value from getInput() is higher than 2020: {rt[0]}")
@@ -73,8 +73,6 @@ def main():
 	if rt[3] > 2020:
 		print(f"one value from getInput() is higher than 2020: {rt[3]}")
 		rtvalue = 1
-
 	return rtvalue
-
 
 exit(main())
