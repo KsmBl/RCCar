@@ -1,8 +1,7 @@
 import sys
-sys.path.insert(0, './libary')
-sys.path.insert(0, './libary/ADS1x15')
+sys.path.insert(0, './libary/')
 
-from getInputs import getInputs, readInputs # local file
+# from getInputs import getInputs, readInputs # local file
 from setSpeed import setSpeed # local file
 from setSteer import setSteer # local file
 from PIDloop import PIDloop # local file
@@ -53,26 +52,5 @@ def main():
 	if rt == 0:
 		print(f"setSpeed(500) ERROR! [{rt}]. Error code 1 expected")
 		rtvalue = 1
-
-	### get Inputs ###
-	#rt = getInputs(None, [1500, 900, 999, 2100])
-	#valid Input
-	if rt[0] > 2020:
-		print(f"one value from getInput() is higher than 2020: {rt[0]}")
-		rtvalue = 1
-	elif rt[0] < 980:
-		print(f"one value from getInput() is lower than 980: {rt[0]}")
-		rtvalue = 1
-
-	#too low input
-	if rt[1] < 980:
-		print(f"one value from getInput() is lower than 980: {rt[1]}")
-		rtvalue = 1
-
-	#too high input
-	if rt[3] > 2020:
-		print(f"one value from getInput() is higher than 2020: {rt[3]}")
-		rtvalue = 1
-	return rtvalue
 
 exit(main())
