@@ -10,9 +10,6 @@ from PIDloop import PIDloop # local file
 from alert import alert # local file
 import time
 
-BAR_LEN = 30
-CHANNEL_COUNT = 6
-
 def main():
 	PIDs = [1, 1, 1]
 	PIDresult = 0
@@ -32,14 +29,13 @@ def main():
 			Axis = []
 			Axis = readInputs()
 			try:
-				print("\033[A\033[A\033[A\033[A\033[A\033[A\033[A")
+				BAR_LEN = 15
 
-				for i in range(CHANNEL_COUNT):
-					ACTIVE_BAR = int((Axis[i] - 1000) * (BAR_LEN / 1000))
+				for i in range(Axis)
+					ACTIVE_BAR = (Axis[i] - 1000) * (BAR_LEN / 100)
 					INACTIVE_BAR = BAR_LEN - ACTIVE_BAR
-					_ACTIVE_BAR = ACTIVE_BAR * "#"
-					_INACTIVE_BAR = INACTIVE_BAR * " "
-					print(f"Channel{i + 1}:  {Axis[i]:04} | [{_ACTIVE_BAR}{_INACTIVE_BAR}]")
+					print("\033[A")
+					print(f"Channel{i + 1}:  {Axis[i]:04} | [{ACTIVE_BAR}{INACTIVE_BAR}]")
 			except:
 				print("ERROR")
 

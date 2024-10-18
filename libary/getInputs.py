@@ -1,57 +1,87 @@
+import threading
 import time
 import json
+import sys
 import os
 
-##config
-ANALOG_0_MIN = 0
-ANALOG_0_MAX = 0
-DIGITAL_0_MIN = 0
-DIGITAL_0_MAX = 0
-ANALOG_2_MIN = 0
-ANALOG_2_MAX = 0
-DIGITAL_1_MIN = 0
-DIGITAL_1_MAX = 0
+SBUS_PIN = 4
 
-#def _startInputScanner(ADS):
-#	# TODO
+globalAxis =	[0, 0, 0, 0,
+		 0, 0, 0, 0,
+		 0, 0, 0, 0,
+		 0, 0, 0, 0]
+
+minValues = []
+maxValues = []
+
+def readMinMax():
+	with open("calibrates.txt", 'r') as f:
+		data = json.load(f)
+
+	global minValues
+	global maxValues
+
+	minValues = data["min"]
+	maxValues = data["max"]
+
+	return 0
+
+def startInputScanner():
+	global globalAxis
+	inputScannerThread = threading.Thread(target=inputScanner)
+	inputScannerThread.start()
+	return 0
+
+def inputScanner():
+	from readSbus import SbusReader
+	global globalAxis
+
+	reader = SbusReader(SBUS_PIN)
+	reader.begin_listen()
+
+	while(not reader.is_connected()):
+		print("reader not ready")
+		time.sleep(0.5)
+
+	#get first valide Input
+	time.sleep(0.1)
+
+	try:
+		while True:
+			is_connected = reader.is_connected()
+			packet_age = reader.get_latest_packet_age()
+
+			channel_data = reader.translate_latest_packet()
+
+			globalAxis = channel_data
+
+	except:
+		reader.end_listen()
+		sys.exit()
 
 #should return values between 1000 and 2000
-#def readInputs(ADS):
-#	# TODO
-#	return [axis0, axis1, axis2, axis3]
+def readInputs(mode = "correct"):
+	global globalAxis
+	
+	if mode == "raw":
+		return globalAxis
+	elif mode == "correct":
+		return correctInputs(globalAxis)
+	else:
+		print("mode unknown | getInputs.py/readInputs()")
 
-def getInputs():
-#	axis0 = int(axisValues[0])
-#	axis1 = int(axisValues[1])
-#	axis2 = int(axisValues[2])
-#	axis3 = int(axisValues[3])
+def correctInputs(Axis):
+	global minValues
+	global maxValues
 
 	#clean Inputs
-#	if axis0 <= ANALOG_0_MIN:
-#		axis0 = ANALOG_0_MIN
-#	elif axis0 >= ANALOG_0_MAX:
-#		axis0 = ANALOG_0_MAX
-#	axis0 = (axis0 - ANALOG_0_MIN) / (ANALOG_0_MAX - ANALOG_0_MIN) * 1000 + 1000
-
-#	if axis1 <= DIGITAL_0_MIN:
-#		axis1 = DIGITAL_0_MIN
-#	elif axis1 >= DIGITAL_0_MAX:
-#		axis1 = DIGITAL_0_MAX
-#	axis1 = (axis1 - DIGITAL_0_MIN) / (DIGITAL_0_MAX - DIGITAL_0_MIN) * 1000 + 1000
+	for i in range(min(len(minValues), len(maxValues))):
+		Axis[i] = max(Axis[i], minValues[i])
+		Axis[i] = min(Axis[i], maxValues[i])
+		try:
+			Axis[i] = int((Axis[i] - minValues[i]) / (maxValues[i] - minValues[i]) * 1000 + 1000)
+		except:
+			pass
 
 
-#	if axis2 <= ANALOG_2_MIN:
-#		axis2 = ANALOG_2_MIN
-#	elif axis2 >= ANALOG_2_MAX:
-#		axis2 = ANALOG_2_MAX
-#	axis2 = (axis2 - ANALOG_2_MIN) / (ANALOG_2_MAX - ANALOG_2_MIN) * 1000 + 1000
-
-#	if axis3 <= DIGITAL_1_MIN:
-#		axis3 = DIGITAL_1_MIN
-#	elif axis3 >= DIGITAL_0_MAX:
-#		axis3 = DIGITAL_0_MAX
-#	axis3 = (axis3 - DIGITAL_1_MIN) / (DIGITAL_0_MAX - DIGITAL_1_MIN) * 1000 + 1000
-#	axisValues = [int(axis0), int(axis1), int(axis2), int(axis3)]
-
-#	return axisValues
-	return 0
+	return Axis

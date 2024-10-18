@@ -1,50 +1,68 @@
 import sys
-import time
 sys.path.insert(0, './libary')
-sys.path.insert(0, './libary/ADS1x15')
 
-from getInputs import setInputSettings, getInputs, startInputScanner # local file
+from getInputs import startInputScanner, readInputs # local file
 from log import createLogfile, log # local file
-import ADS1x15 # local file
+import time
+import json
+
+CHANNEL_COUNT = 6
+CALIBRATE_TIME = 10 # seconds
 
 def main():
-	#Analog-Digital-Converter-Settings
-	ADSettings = setInputSettings()
-	startInputScanner(ADSettings)
-	time.sleep(0.5) #get first inputs
+	startInputScanner()
+
+	time.sleep(3)
 
 	Axis = []
-	Axis = getInputs(ADSettings, False, "raw")
+	Axis = readInputs("raw")
 
-	minAxis = [Axis[0], Axis[1], Axis[2], Axis[3]]
-	maxAxis = [Axis[0], Axis[1], Axis[2], Axis[3]]
+	minAxis =	[0, 0, 0, 0,
+			 0, 0, 0, 0,
+			 0, 0, 0, 0,
+			 0, 0, 0, 0]
+
+	maxAxis =	[0, 0, 0, 0,
+			 0, 0, 0, 0,
+			 0, 0, 0, 0,
+			 0, 0, 0, 0]
+
+	minAxis = Axis
 
 	try:
+		time_gone = 0
 		while True:
 			Axis = []
-			Axis = getInputs(ADSettings, False, "raw")
+			Axis = readInputs("raw")
 
 			time.sleep(0.05)
+			time_gone += 0.05 # time.sleep value
 
-			i = 0
+			for i in range(CHANNEL_COUNT):
+				minAxis[i] = min(minAxis[i], Axis[i])
+				maxAxis[i] = max(maxAxis[i], Axis[i])
 
-			while i <= 3:
-				if not Axis == [''] and not Axis == "ERROR":
-					if int(Axis[i]) < int(minAxis[i]):
-						minAxis[i] = int(Axis[i])
-					if int(Axis[i]) > int(maxAxis[i]):
-						maxAxis[i] = int(Axis[i])
-
-				i += 1
-
-			print(f"value: {Axis}")
-			print(f"min:   {minAxis}")
-			print(f"max:   {maxAxis}")
+			print(f"value: {Axis[:CHANNEL_COUNT]}")
+			print(f"min:   {minAxis[:CHANNEL_COUNT]}")
+			print(f"max:   {maxAxis[:CHANNEL_COUNT]}")
 			print("+++++++++")
+
+			if time_gone >= CALIBRATE_TIME:
+				break
 	except KeyboardInterrupt:
 		pass
 
-	# read raw inputs
-	# write max and min to file
+	print(f"min:   {minAxis[:CHANNEL_COUNT]}")
+	print(f"max:   {maxAxis[:CHANNEL_COUNT]}")
+
+	combined_data = {
+		"min": minAxis,
+		"max": maxAxis
+	}
+
+	with open("calibrates.txt", 'w') as f:
+		json.dump(combined_data, f)
+
+	return 0
 
 main()
