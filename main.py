@@ -5,7 +5,7 @@ sys.path.insert(0, './libary/')
 from getInputs import startInputScanner, readMinMax, readInputs # local file # TODO
 from log import createLogfile, log # local file
 from setSpeed import setSpeed # local file
-from setSteer import setSteer # local file
+from setSteer import setSteer, setupSteerPin # local file
 from PIDloop import PIDloop # local file
 from alert import alert # local file
 import time
@@ -18,6 +18,7 @@ def main():
 	PIDresult = 0
 	startInputScanner()
 	readMinMax()
+	setupSteerPin(12)
 
 	time.sleep(3)
 
@@ -33,7 +34,6 @@ def main():
 			Axis = readInputs()
 			try:
 				print("\033[A\033[A\033[A\033[A\033[A\033[A\033[A")
-
 				for i in range(CHANNEL_COUNT):
 					ACTIVE_BAR = int((Axis[i] - 1000) * (BAR_LEN / 1000))
 					INACTIVE_BAR = BAR_LEN - ACTIVE_BAR
@@ -43,8 +43,10 @@ def main():
 			except:
 				print("ERROR")
 
-	#		#if accelerometer is available
-	#		PIDresult = PIDloop(PIDs)
+#			#if accelerometer is available
+#			PIDresult = PIDloop(PIDs)
+
+#			setSteer(Axis[3])
 
 			time.sleep(0.04)
 	except KeyboardInterrupt:

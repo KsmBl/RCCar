@@ -35,8 +35,8 @@ def main():
 			Axis = []
 			Axis = readInputs("raw")
 
-			time.sleep(0.05)
-			time_gone += 0.05 # time.sleep value
+			time.sleep(0.1)
+			time_gone += 0.1 # time.sleep value
 
 			for i in range(CHANNEL_COUNT):
 				minAxis[i] = min(minAxis[i], Axis[i])
