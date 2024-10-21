@@ -14,7 +14,6 @@ def setSteer(pwm):
 	global servo
 
 	angle = (pwm - 1500) / 500
-	print(angle)
 
 	servo.value = angle
 

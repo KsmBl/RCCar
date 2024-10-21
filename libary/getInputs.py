@@ -48,12 +48,7 @@ def inputScanner():
 
 	try:
 		while True:
-			is_connected = reader.is_connected()
-			packet_age = reader.get_latest_packet_age()
-
-			channel_data = reader.translate_latest_packet()
-
-			globalAxis = channel_data
+			globalAxis = reader.translate_latest_packet()
 
 	except:
 		reader.end_listen()
