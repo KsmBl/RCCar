@@ -28,7 +28,7 @@ def main():
 	minAxis = Axis
 
 	try:
-		time_gone = 0
+		timeGone = 0
 		print("")
 		print("")
 		print("")
@@ -39,7 +39,7 @@ def main():
 			Axis = readInputs("raw")
 
 			time.sleep(0.1)
-			time_gone += 0.1 # time.sleep value
+			timeGone += 0.1 # time.sleep value
 
 			for i in range(CHANNEL_COUNT):
 				minAxis[i] = min(minAxis[i], Axis[i])
@@ -51,7 +51,7 @@ def main():
 			print(f"max:   {maxAxis[:CHANNEL_COUNT]}")
 			print("+++++++++")
 
-			if time_gone >= CALIBRATE_TIME:
+			if timeGone >= CALIBRATE_TIME:
 				break
 	except KeyboardInterrupt:
 		pass
