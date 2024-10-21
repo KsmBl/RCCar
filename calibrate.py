@@ -32,7 +32,6 @@ def main():
 	try:
 		time_gone = 0
 		while True:
-			Axis = []
 			Axis = readInputs("raw")
 
 			time.sleep(0.1)
@@ -41,7 +40,7 @@ def main():
 			for i in range(CHANNEL_COUNT):
 				minAxis[i] = min(minAxis[i], Axis[i])
 				maxAxis[i] = max(maxAxis[i], Axis[i])
-
+			print("\033[3A")
 			print(f"value: {Axis[:CHANNEL_COUNT]}")
 			print(f"min:   {minAxis[:CHANNEL_COUNT]}")
 			print(f"max:   {maxAxis[:CHANNEL_COUNT]}")
