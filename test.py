@@ -3,54 +3,73 @@ sys.path.insert(0, './libary/')
 
 # from getInputs import getInputs, readInputs # local file
 from setSpeed import setSpeed # local file
-from setSteer import setSteer # local file
+from setSteer import setupSteerPin, setSteer # local file
 from PIDloop import PIDloop # local file
 from alert import alert # local file
+from time import sleep
+
 
 def main():
-	rtvalue = 0
+	error = 0
+	mode = ""
+	try:
+		mode = sys.argv[1]
+	except:
+		pass
+	
+	if not mode == "":
+		a = input("do you have GPIO pins? [y/n]")
+		if a in ["Y", "y", "Yes", "yes", "J", "j", "Ja", "ja"]:
+			SERVO_PIN = int(input("on which GPIO Pin is your servo motor connected to?"))
+			print(f"Your servo motor is connected to GPIO {SERVO_PIN}")
+			error += testSteering(SERVO_PIN)
 
-	### set Steer ###
-	rt = setSteer(2500, 0)
-	if rt == 0:
-		print(f"setSteer(2500, 0) ERROR! [{rt}]. Error code 1 expected")
-		rtvalue = 1
+			MOTOR_PIN = int(input("on which GPIO Pin is your motor connected to? (for acceleration)"))
+			print(f"Your motor is connected to GPIO {MOTOR_PIN}")
+			input("press enter when you tires dont touch the ground!")
+			error += testAccelerate(MOTOR_PIN)
 
-	rt = setSteer(1500, 0)
-	if not rt == 0:
-		print(f"setSteer(1500, 0) ERROR! [{rt}]. No Error code expected")
-		rtvalue = 1
+		else:
+			print("Motor tests skiped")
+			print("alert tests skiped")
+	else:
+		SERVO_PIN = int(input("on which GPIO Pin is your servo motor connected to?"))
+		print(f"Your servo motor is connected to GPIO {SERVO_PIN}")
+		error += testSteering(SERVO_PIN)
 
-	rt = setSteer(500, 0)
-	if rt == 0:
-		print(f"setSteer(500, 0) ERROR! [{rt}]. Error code 1 expected")
-		rtvalue = 1
+		MOTOR_PIN = int(input("on which GPIO Pin is your motor connected to? (for acceleration)"))
+		print(f"Your motor is connected to GPIO {MOTOR_PIN}")
+		input("press enter when you tires dont touch the ground!")
+		error += testAccelerate(MOTOR_PIN)
+		
+	### PID overflow ### # TODO
 
-	# PID overflow #
-	rt = setSteer(1999, 50)
-	if not rt == 0:
-		print(f"setSteer(1999, 50) ERROR! [{rt}]. No Error code expected")
-		rtvalue = 1
+	### alert ### # TODO
 
-	rt = setSteer(1000, -50)
-	if not rt == 0:
-		print(f"setSteer(1000, -50) ERROR! [{rt}]. No Error code expected")
-		rtvalue = 1
+	### getInputs ### # TODO
 
-	### set Speed ###
-	rt = setSpeed(2500)
-	if rt == 0:
-		print(f"setSpeed(2500) ERROR! [{rt}]. Error code 1 expected")
-		rtvalue = 1
+	### log ### # TODO
 
-	rt = setSpeed(1500)
-	if not rt == 0:
-		print(f"setSpeed(1500) ERROR! [{rt}]. No Error code expected")
-		rtvalue = 1
+	return error
 
-	rt = setSpeed(500)
-	if rt == 0:
-		print(f"setSpeed(500) ERROR! [{rt}]. Error code 1 expected")
-		rtvalue = 1
+def testSteering(SERVO_PIN):
+	setupSteerPin(SERVO_PIN)
+	setSteer(1000)
+	sleep(1)
+	setSteer(1500)
+	sleep(1)
+	setSteer(2000)
+	sleep(1)
+	setSteer(1500)
+
+	a = input("has your Servo turned? [y/n]")
+	if a in ["Y", "y", "Yes", "yes", "J", "j", "Ja", "ja"]:
+		return 0
+	else:
+		print("check you Pin and the config/duty_cicle")
+		return 1
+
+def testAccelerate(MOTOR_PIN): # TODO
+	return 0
 
 exit(main())
