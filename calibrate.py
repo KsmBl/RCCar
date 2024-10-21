@@ -12,8 +12,6 @@ CALIBRATE_TIME = 10 # seconds
 def main():
 	startInputScanner()
 
-	time.sleep(3)
-
 	Axis = []
 	Axis = readInputs("raw")
 
@@ -31,6 +29,12 @@ def main():
 
 	try:
 		time_gone = 0
+		print("")
+		print("")
+		print("")
+		print("")
+		print("")
+
 		while True:
 			Axis = readInputs("raw")
 
@@ -40,7 +44,8 @@ def main():
 			for i in range(CHANNEL_COUNT):
 				minAxis[i] = min(minAxis[i], Axis[i])
 				maxAxis[i] = max(maxAxis[i], Axis[i])
-			print("\033[3A")
+
+			print("\033[5A")
 			print(f"value: {Axis[:CHANNEL_COUNT]}")
 			print(f"min:   {minAxis[:CHANNEL_COUNT]}")
 			print(f"max:   {maxAxis[:CHANNEL_COUNT]}")

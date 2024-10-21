@@ -13,6 +13,7 @@ globalAxis =	[0, 0, 0, 0,
 
 minValues = []
 maxValues = []
+readerReady = False
 
 def readMinMax():
 	with open("calibrates.txt", 'r') as f:
@@ -26,22 +27,35 @@ def readMinMax():
 
 	return 0
 
-def startInputScanner():
+def startInputScanner(mode = "wait"): # wait = wait for scanner is ready, instant = dont wait for scanner to perform a return
 	global globalAxis
+	global readerReady
 	inputScannerThread = threading.Thread(target=inputScanner)
 	inputScannerThread.start()
-	return 0
+
+	while mode == "wait":
+		if readerReady:
+			return 0
+		time.sleep(0.25)
+
+	return 1
+
+def stopInputScanner():
+	global inputScannerThread
 
 def inputScanner():
 	from readSbus import SbusReader
 	global globalAxis
+	global readerReady
 
 	reader = SbusReader(SBUS_PIN)
 	reader.begin_listen()
 
 	while(not reader.is_connected()):
 		print("reader not ready")
-		time.sleep(0.5)
+		time.sleep(0.25)
+
+	readerReady = True
 
 	#get first valide Input
 	time.sleep(0.1)
