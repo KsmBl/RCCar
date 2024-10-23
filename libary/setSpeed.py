@@ -7,6 +7,7 @@ import pigpio
 MOTOR = 0
 PI = None
 
+# prepare right GPIO pin for a pwm signal that controlls a ESC
 def setupSpeedMotor(PIN):
 	global MOTOR
 	global PI
@@ -15,6 +16,7 @@ def setupSpeedMotor(PIN):
 
 	PI = pigpio.pi()
 
+# set the motorspeed to a value between 1000us and 2000us
 def setSpeed(pwm):
 	global MOTOR
 	global PI

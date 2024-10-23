@@ -3,13 +3,18 @@ from gpiozero import Servo
 from gpiozero.pins.pigpio import PiGPIOFactory
 import time
 
+# thats the variable for the GPIO pin where the Motor is connected to
 servo = None
 
+# setup and prepare the right GPIO pin
 def setupSteerPin(PIN):
 	global servo
 	factory = PiGPIOFactory()
+
+	# setup pin with min and max duty cicle
 	servo = Servo(PIN, min_pulse_width=0.0005, max_pulse_width=0.0025, pin_factory=factory)
 
+# turn motor to a position between -1 and 1
 def setSteer(pwm):
 	global servo
 
