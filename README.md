@@ -1,9 +1,9 @@
 # RCCar  
-Racio controlled car from scratch  
+Racio controlled car from scratch based on a raspberry PI (3B in my case)  
 
 ## MVP:  
-controll ESC (electronic system controller) to change brushless motors speed  
-use ELRS RX for long range inputs (ELRS is an open source radio protocol based on crossfire)  
+controll ESC (electronic speed controller) to change brushless motors speed  
+use ELRS RX for long range inputs (ELRS is an open source radio protocol based on CRSF)  
 change Servos direction to change the direction of the car  
 
 ## Addons:  
