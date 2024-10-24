@@ -7,12 +7,12 @@ import time
 servo = None
 
 # setup and prepare the right GPIO pin
-def setupSteerPin(PIN):
+def setupSteerPin(PIN, minPulseWidth, maxPulseWidth):
 	global servo
 	factory = PiGPIOFactory()
 
 	# setup pin with min and max duty cicle
-	servo = Servo(PIN, min_pulse_width=0.0005, max_pulse_width=0.0025, pin_factory=factory)
+	servo = Servo(PIN, min_pulse_width=minPulseWidth, max_pulse_width=maxPulseWidth, pin_factory=factory)
 
 # turn motor to a position between -1 and 1
 def setSteer(pwm):

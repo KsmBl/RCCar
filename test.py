@@ -2,8 +2,9 @@ import sys
 sys.path.insert(0, './libary/')
 
 # from getInputs import getInputs, readInputs # local file
-from setSpeed import setSpeed # local file
 from setSteer import setupSteerPin, setSteer # local file
+from configReader import getConfig # local file
+from setSpeed import setSpeed # local file
 from PIDloop import PIDloop # local file
 from alert import alert # local file
 from time import sleep
@@ -11,6 +12,8 @@ import pigpio
 
 
 def main():
+	config = getConfig()
+
 	error = 0
 	mode = ""
 	try:
@@ -45,7 +48,7 @@ def testSteering():
 	SERVO_PIN = int(input("on which GPIO Pin is your servo motor connected to?"))
 	print(f"Your servo motor is connected to GPIO {SERVO_PIN}")
 
-	setupSteerPin(SERVO_PIN)
+	setupSteerPin(SERVO_PIN, config['OMnP'], config['OMxP'])
 	setSteer(1000)
 	sleep(1)
 	setSteer(1500)
@@ -58,7 +61,7 @@ def testSteering():
 	if a in ["Y", "y", "Yes", "yes", "J", "j", "Ja", "ja"]:
 		return 0
 	else:
-		print("check your Pin and the config/duty_cicle")
+		print("check your Pin and the duty_cicle in the config file")
 		return 1
 
 def testAccelerate():
