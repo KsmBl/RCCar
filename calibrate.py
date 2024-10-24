@@ -3,6 +3,7 @@ sys.path.insert(0, './libary')
 
 from getInputs import startInputScanner, readInputs # local file
 from log import createLogfile, log # local file
+from configReader import getConfig # local file
 import time
 import json
 
@@ -13,8 +14,9 @@ CHANNEL_COUNT = 6
 CALIBRATE_TIME = 10 # seconds
 
 def main():
+	config = getConfig()
 	# start a new thread that reads the inputs
-	startInputScanner()
+	startInputScanner(config['GSB'])
 
 	Axis = []
 	# read the raw inputs without calibration

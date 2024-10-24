@@ -4,9 +4,6 @@ import json
 import sys
 import os
 
-# set Pin for SBUS receiver to GPIO pin 4
-SBUS_PIN = 4
-
 globalAxis =	[0, 0, 0, 0,
 		 0, 0, 0, 0,
 		 0, 0, 0, 0,
@@ -35,13 +32,13 @@ def readMinMax():
 	return 0
 
 # start a new thread that reads data from the SBUS_PIN GPIO pin
-def startInputScanner(mode = "wait"): # wait = wait for scanner is ready, instant = dont wait for scanner to perform a return
+def startInputScanner(SbusPin, mode = "wait"): # wait = wait for scanner is ready, instant = dont wait for scanner to perform a return
 	# get global variables
 	global globalAxis
 	global readerReady
 
 	# start thread
-	inputScannerThread = threading.Thread(target=inputScanner)
+	inputScannerThread = threading.Thread(target=inputScanner, args=[SbusPin])
 	inputScannerThread.start()
 
 	while mode == "wait":
@@ -53,7 +50,7 @@ def startInputScanner(mode = "wait"): # wait = wait for scanner is ready, instan
 	return 1
 
 # start sbus_reader libary und returns values from it
-def inputScanner():
+def inputScanner(SbusPin):
 	from readSbus import SbusReader
 
 	# get global variables
@@ -61,7 +58,7 @@ def inputScanner():
 	global readerReady
 
 	# start reader
-	reader = SbusReader(SBUS_PIN)
+	reader = SbusReader(SbusPin)
 	reader.begin_listen()
 
 	# check if its connected
@@ -86,7 +83,6 @@ def inputScanner():
 
 # return values from controller
 def readInputs(mode = "correct"):
-	# get global variable
 	global globalAxis
 
 	# return raw inputs (for calibrate.py)
@@ -96,12 +92,10 @@ def readInputs(mode = "correct"):
 		# correct the inputs with the values that are writte in calibrates.txt by calibrate.py
 		return correctInputs(globalAxis)
 	else:
-		# mode unknown
 		print("mode unknown | getInputs.py/readInputs()")
 
 # correct the inputs to values between 1000 and 2000
 def correctInputs(Axis):
-	# get global variables
 	global minValues
 	global maxValues
 
