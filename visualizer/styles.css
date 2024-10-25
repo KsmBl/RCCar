@@ -1,0 +1,52 @@
+body, body *
+{
+	margin: 0px;
+	padding: 0px;
+	background-color: #A7A7A7;
+	color: #121212;
+}
+
+#carcontainer
+{
+	background-color: red;
+	width: 500px;
+	height: 700px;
+	left: 150px;
+	top: 150px;
+	position: absolute;
+}
+
+.wheel
+{
+	width: 100px;
+	height: 200px;
+	background-color: #212121;
+	position: absolute;
+	border-radius: 15px;
+}
+
+#wheelFL
+{
+	left: 60px;
+	top: 15px;
+	transform: rotate(25deg);
+}
+
+#wheelFR
+{
+	right: 60px;
+	top: 15px;
+	transform: rotate(25deg);
+}
+
+#wheelRL
+{
+	left: 60px;
+	bottom: 15px;
+}
+
+#wheelRR
+{
+	right: 60px;
+	bottom: 15px;
+}

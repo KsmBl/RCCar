@@ -42,7 +42,6 @@ def getConfig():
 
 		"OMT" : int(config['Other']['Maxthrottlearm']), # Other-Max-Throttle for arming
 		"OMnP" : float(config['Other']['Minpulsewidth']), # Other-Min-PWM Servo
-		"OMxP" : float(config['Other']['Maxpulsewidth']) # Other-Max-PWM Servo
+		"OMxP" : float(config['Other']['Maxpulsewidth']), # Other-Max-PWM Servo
+		"OLB" : float(config['Other']['Logbuffersize']) # Other-Log-Buffer
 	}
-
-getConfig()
