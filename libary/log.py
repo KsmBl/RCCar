@@ -22,21 +22,15 @@ def log(message):
 
 	logcount += 1
 
-	logbuffer.append(message)
+	logbuffer.append(f"{time.time()} | {message}")
 
 	if logcount >= logbuffersize:
 		# write into file
 		f = open(logfile, "a")
 		for i in logbuffer:
-			f.write(f"{time.time()} | {i}\n")
+			f.write(f"{i}\n")
 
 		print("logfile written")
 		f.close()
 		logbuffer = []
 		logcount = 0
-
-
-
-
-
-

@@ -100,9 +100,10 @@ def main():
 			if armed:
 				speed = ((Axis[config['CT']] - 1000) * config[f"M{mode}"]['S']) + 1000
 				setSpeed(speed)
-				log(f"setSpeed {speed}")
+				tmpDisarmSpeed = speed
 
-				tmpDisarmSpeed = ((Axis[config['CT']] - 1000) * config[f"M{mode}"]['S']) + 1000
+				log(f"setSpeed {tmpDisarmSpeed}")
+				print(tmpDisarmSpeed)
 			else:
 				# slow disarming to prevend from damaging the motor
 				tmpDisarmSpeed = ((tmpDisarmSpeed - 1000) * 0.7) + 1000
@@ -110,6 +111,7 @@ def main():
 				# stoping the motor instant when the motor spins slow enough
 				if tmpDisarmSpeed <= 1050:
 					tmpDisarmSpeed = 1000
+				log(f"setSpeed 0")
 
 				setSpeed(tmpDisarmSpeed)
 

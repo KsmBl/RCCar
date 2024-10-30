@@ -10,15 +10,28 @@
 <body>
 	<div id="topbarcontainer"> </div>
 	<input type="file" id="fileInput" accept=".log">
+	<p id="time"> time: 0s </p>
 
 	<div id="carcontainer">
 		<div id="wheelFL" class="wheel"> </div>
 		<div id="wheelFR" class="wheel"> </div>
 		<div id="wheelRL" class="wheel"> </div>
 		<div id="wheelRR" class="wheel"> </div>
+		<div id="powerIndicator"> 0% </div>
+		<div id="gearBox"> 1. gear </div>
+		<label class="switch">
+			<input type="checkbox" onclick="return false;" id="startCheckbox">
+			<span class="slider round"></span>
+		</label>
+	</div>
+
+	<div id="chartBox">
+		<canvas id="lineChart" style="background-color: #00000000">
+		</canvas>
 	</div>
 
 	<script src="/libary.js"> </script>
+	<script src="/charts/chart.js"></script>
 	<script src="/script.js"> </script>
 </body>
 </html>
