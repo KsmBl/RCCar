@@ -3,25 +3,53 @@ function main()
 	loadTopbar(document.getElementById("topbarcontainer"));
 }
 
-function visualize(logdata)
+async function visualize(logdata)
 {
-	let wheelFL = document.getElementById("wheelFL");
-	let wheelFR = document.getElementById("wheelFR");
-	let wheelRL = document.getElementById("wheelRL");
-	let wheelRR = document.getElementById("wheelRR");
+	const wheelFL = document.getElementById("wheelFL");
+	const wheelFR = document.getElementById("wheelFR");
+	const wheelRL = document.getElementById("wheelRL");
+	const wheelRR = document.getElementById("wheelRR");
 
-	let datalines = logdata.split('\n');
+	const datalines = logdata.split('\n');
+
+	const systemStartTime = parseFloat(Date.now()) / 1000;
+	let systemCurrentTime = (parseFloat(Date.now()) / 1000) - systemStartTime;
+
+	const logStartTime = parseFloat(datalines[0].split(' | ')[0]);
+	let logCurrentTime = parseFloat(datalines[0].split(' | ')[0]) - logStartTime;
 
 	for (i in datalines) {
-		let time = datalines[i].split(' | ')[0];
-		var value = datalines[i].split(' | ')[1];
-		console.log(value);
+		console.log(systemCurrentTime >= logCurrentTime);
+		while (systemCurrentTime >= logCurrentTime) {
+			// stop when file is at the end
+			if(datalines[i].split(' | ')[0] == "") {
+				break;
+			}
 
-		if(value.split(' ')[0] == "setSteer") {
-			let turnvalue = (value.split(' ')[1] - 1500) / 10;
-			wheelFL.style.transform = `rotate(${turnvalue}deg)`;
-			wheelFR.style.transform = `rotate(${turnvalue}deg)`;
+
+			systemCurrentTime = (Date.now() / 1000) - systemStartTime;
+			let logCurrentTime = parseFloat(datalines[i].split(' | ')[0]) - logStartTime;
+
+			console.log("systemCurrentTime: " + systemCurrentTime);
+			console.log("logCurrentTime: " + logCurrentTime);
+			console.log(systemCurrentTime >= logCurrentTime);
+			console.log("-------------")
+
+			if (systemCurrentTime >= logCurrentTime) {
+				var value = datalines[i].split(' | ')[1];
+
+				if(value.split(' ')[0] == "setSteer") {
+					let turnvalue = (value.split(' ')[1] - 1500) / 10;
+					wheelFL.style.transform = `rotate(${turnvalue}deg)`;
+					wheelFR.style.transform = `rotate(${turnvalue}deg)`;
+				}
+
+				break;
+			}
+
+			await new Promise(resolve => setTimeout(resolve, 50));
 		}
+
 	}
 }
 
@@ -38,5 +66,12 @@ fileInput.addEventListener('change', (event) =>
 	};
 	reader.readAsText(file);
 });
+
+function sleep(ms)
+{
+	var start = new Date().getTime(), expire = start + ms;
+	while (new Date().getTime() < expire) { }
+	return;
+}
 
 main();
