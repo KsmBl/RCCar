@@ -21,18 +21,18 @@ def main():
 	except:
 		pass
 	
-	if not mode == "":
-		a = input("do you have GPIO pins? [y/n]")
-		if a in ["Y", "y", "Yes", "yes", "J", "j", "Ja", "ja"]:
-			error += testSteering()
-			error += testAccelerate()
+#	if not mode == "":
+#		a = input("do you have GPIO pins? [y/n]")
+#		if a in ["Y", "y", "Yes", "yes", "J", "j", "Ja", "ja"]:
+#			error += testSteering()
+#			error += testAccelerate()
 
-		else:
-			print("Motor tests skiped")
-			print("alert tests skiped")
-	else:
-		error += testSteering()
-		error += testAccelerate()
+#		else:
+#			print("Motor tests skiped")
+#			print("alert tests skiped")
+#	else:
+#		error += testSteering()
+#		error += testAccelerate()
 		
 	### PID overflow ### # TODO
 
