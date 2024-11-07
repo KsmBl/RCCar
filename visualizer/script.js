@@ -1,3 +1,4 @@
+// diagram chart
 const ctx = document.getElementById('lineChart').getContext('2d');
 let chart = null;
 
@@ -25,6 +26,7 @@ function main()
 		},
 		options: {
 			responsive: true,
+			maintainAspectRatio: false,
 			scales: {
 				y: {
 					beginAtZero: true
@@ -34,12 +36,17 @@ function main()
 	});
 }
 
-function addDataPoint(time, value, curve)
+// add a new datapoint to diagram chart
+function addDataPoint(time = false, value, curve)
 {
 	const currentPoints = chart.data.datasets[curve].data.length;
 	chart.data.datasets[curve].data.push(value);
-	chart.data.labels.push(time);
-	chart.update();
+
+	if (!(!time)) {
+		let labels = chart.data.labels;
+		labels.push(time.toFixed(3));
+		chart.update();
+	}
 }
 
 async function visualize(logdata)
@@ -62,24 +69,16 @@ async function visualize(logdata)
 	let logCurrentTime = parseFloat(datalines[0].split(' | ')[0]) - logStartTime;
 
 	for (i in datalines) {
-		
-		if(datalines[i].split(' | ')[1].split(' ')[0] == "setSpeed") {
-			let speedvalue = parseInt(((datalines[i].split(' | ')[1].split(' ')[1] - 1000) / 10));
-			if(speedvalue <= 0) {
-				speedvalue = 0;
-			}
-			timeField.innerHTML = `time: ${parseInt((datalines[i].split(' | ')[0]) - logStartTime)}s`;
-			addDataPoint(systemCurrentTime, speedvalue, 0);
-		} else if(datalines[i].split(' | ')[1].split(' ')[0] == "setSteer") {
-			let steervalue = parseInt(((datalines[i].split(' | ')[1].split(' ')[1] - 1000) / 10));
-			timeField.innerHTML = `time: ${parseInt((datalines[i].split(' | ')[0]) - logStartTime)}s`;
-			addDataPoint(systemCurrentTime, steervalue, 1);
+		// stop when file is at the end
+		if(datalines[i].split(' | ')[0] == "") {
+			addTerminal("logfile end", systemCurrentTime);
+			break;
 		}
 
 		while (systemCurrentTime >= logCurrentTime) {
 			// stop when file is at the end
 			if(datalines[i].split(' | ')[0] == "") {
-				console.log("end");
+				addTerminal("logfile end", systemCurrentTime);
 				break;
 			}
 
@@ -90,9 +89,15 @@ async function visualize(logdata)
 				var value = datalines[i].split(' | ')[1];
 
 				if(value.split(' ')[0] == "setSteer") {
-					let turnvalue = (value.split(' ')[1] - 1500) / 10;
+					let steervalue = value.split(' ')[1];
+					let turnvalue = (steervalue - 1500) / 10;
 					wheelFL.style.transform = `rotate(${turnvalue}deg)`;
 					wheelFR.style.transform = `rotate(${turnvalue}deg)`;
+
+					let steervaluePercent = parseInt((steervalue - 1000) / 10);
+					timeField.innerHTML = `time: ${parseInt((datalines[i].split(' | ')[0]) - logStartTime)}s`;
+					addDataPoint(false, steervaluePercent, 1);
+
 				} else if(value.split(' ')[0] == "setSpeed") {
 					let speedvalue = parseInt(((value.split(' ')[1] - 1000) / 10));
 					if(speedvalue <= 0) {
@@ -101,12 +106,27 @@ async function visualize(logdata)
 					zitterDiv(wheelRL, speedvalue / 2);
 					zitterDiv(wheelRR, speedvalue / 2);
 					powerIndicator.innerHTML = `${speedvalue}%`;
+					addDataPoint(logCurrentTime, speedvalue, 0);
 				} else if(value == "armed") {
 					startCheckbox.checked = true;
+					addTerminal("armed", logCurrentTime);
 				} else if(value == "disarmed") {
 					startCheckbox.checked = false;
+					addTerminal("disarmed", logCurrentTime);
 				} else if(value.split(' ')[0] == "switched") {
 					gearbox.innerHTML = `${value.split(' ')[3]}. gear`;
+					addTerminal(`switched to ${value.split(' ')[3]}. gear`, logCurrentTime);
+				} else if(value == "startInputScanner...") {
+					addTerminal("start InputScanner", logCurrentTime);
+					addTerminal("waiting for inputs...", logCurrentTime);
+				} else if(value == "readMinMax...") {
+					addTerminal("reading calibration values", logCurrentTime);
+				} else if(value == "setupSteerPin...") {
+					addTerminal("setup and prepare steering pin", logCurrentTime);
+				} else if(value == "setupSpeedMotor...") {
+					addTerminal("setup and prepare motor pin", logCurrentTime);
+				} else if(value == "ready") {
+					addTerminal("ready!", logCurrentTime);
 				}
 
 				break;
@@ -144,6 +164,13 @@ function zitterDiv(element, strength)
 {
 	const offset = Math.random() * strength - (strength / 2);
 	element.style.transform = `translate(${offset / 3}px, ${offset / 2}px)`;
+}
+
+function addTerminal(string, time)
+{
+	const textarea = document.getElementById("terminalTextarea");
+	textarea.innerHTML += `${time.toFixed(2)}: ${string}\n`;
+	textarea.scrollTop = textarea.scrollHeight;
 }
 
 main();
