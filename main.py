@@ -84,6 +84,7 @@ def main():
 
 			log(f"setSteer {Axis[config['CS']]}")
 			setSteer(Axis[config['CS']])
+			PIDloop([0, 0, 0])
 
 			# arm the car when the throttle is down and the arm switch is fliped
 			if not armed and config['CAMn'] <= Axis[config['CA']] <= config['CAMx'] and Axis[config['CT']] <= config['OMT']:
