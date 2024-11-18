@@ -15,7 +15,7 @@ def PIDloop(PIDs):
 	zAccel = round(rt[0]['z'] / 9.807, 2)
 	temp = rt[2]
 
-	print(zAccel)
+	#print(zAccel)
 	
 
 	### TODO: calculations
