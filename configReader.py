@@ -8,6 +8,8 @@ def getConfig():
 		"GSB" : int(config['GPIOs']['Sbuspin']), # GPIO-SBus
 		"GS" : int(config['GPIOs']['Steerpin']), # GPIO-Steer
 		"GT" : int(config['GPIOs']['ESCpin']), # GPIO-Throttle
+		"GDT" : int(config['GPIOs']['DistanceTrigger']), # GPIO-DistanceTrigger
+		"GDE" : int(config['GPIOs']['DistanceEcho']), # GPIO-DistanceEcho
 
 		"PID" : [int(config['PID']['P']), int(config['PID']['I']), int(config['PID']['I'])], # PID
 		

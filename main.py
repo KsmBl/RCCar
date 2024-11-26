@@ -4,6 +4,7 @@ sys.path.insert(0, './libary/')
 
 # imports
 from getInputs import startInputScanner, readMinMax, readInputs # local file
+from hcsr04 import startDistanceScanner, getDistance # local file
 from setSpeed import setSpeed, setupSpeedMotor # local file
 from setSteer import setSteer, setupSteerPin # local file
 from configReader import getConfig # local file
@@ -12,16 +13,20 @@ from PIDloop import PIDloop # local file
 from alert import alert # local file
 import time
 
-#drive mode
+# drive mode
 mode = 1
 
-#car started / stopped
+# car started / stopped
 armed = False
 
-#var for slowing the motor down
+# var for slowing the motor down
 tmpDisarmSpeed = 0
 
 config = []
+
+# changed when driven too close too walls and Distancecheck is in config.ini for used Mode activated
+speedLimit = 0
+speedMulti = 1
 
 def main():
 	# prepare everything
@@ -34,14 +39,20 @@ def main():
 	global armed
 	global mode
 
+	distance = 0
+
 	try:
 		# all prepare work is done
 		log("ready")
 		print("ready")
 
+
 		while True:
 			# Axis is an Array with all Axis
 			Axis = readInputs()
+
+			# read distance to front
+			distance = getDistance()
 
 			# run every fifths time
 			if fivecount >= 5:
@@ -54,7 +65,7 @@ def main():
 			setSteer(Axis[config['CS']])
 
 			armDisarm(Axis)
-			controllSpeed(Axis)
+			controllSpeed(Axis, distance)
 
 	except KeyboardInterrupt:
 		sys.exit()
@@ -69,6 +80,10 @@ def setupPi():
 	# start thread that reads the inputs from the SBUS pin
 	log("startInputScanner...")
 	startInputScanner(config['GSB'])
+
+	# start thread that reads the distance to the front
+	log("startDistanceScanner...")
+	startDistanceScanner(config['GDT'], config['GDE'])
 
 	# read config with calibration values
 	log("readMinMax...")
@@ -119,19 +134,46 @@ def armDisarm(Axis):
 		log("disarmed")
 		print("disarmed")
 
-def controllSpeed(Axis):
+def controllSpeed(Axis, distance):
 	global tmpDisarmSpeed
 	global config
 	global armed
 	global mode
+	global speedLimit
+	global speedMulti
 
 	if armed:
 		speed = ((Axis[config['CT']] - 1000) * config[f"M{mode}"]['S']) + 1000
+
+		if config[f"M{mode}"]['D'] == 1:
+			# TODO if to close, limit throttle
+			if distance <= 30: # cm
+				speedMulti = (distance * 3) / 100
+
+			if distance <= 5:
+				speedLimit = 3
+			elif distance <= 15:
+				speedLimit = 2
+			elif distance <= 30:
+				speedLimit = 1
+			else:
+				# prevent disabling speedLimit when the sensor is too close to a wall and returns ~804
+				if distance >= 30 and speedLimit == 3:
+					pass
+				else:
+					speedLimit = 0
+				
+			speed = ((speed - 1000) * speedMulti) + 1000
+
 		setSpeed(speed)
 		tmpDisarmSpeed = speed
 
 		log(f"setSpeed {tmpDisarmSpeed}")
 		print(tmpDisarmSpeed)
+		print(speedLimit)
+		print(speedMulti)
+		print(distance)
+		print("--------")
 	else:
 		# slow disarming to prevend from damaging the motor
 		tmpDisarmSpeed = ((tmpDisarmSpeed - 1000) * 0.7) + 1000
