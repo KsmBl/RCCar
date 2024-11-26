@@ -43,7 +43,8 @@ def main():
 
 	try:
 		# all prepare work is done
-		log("ready")
+		if config['OL']:
+			log("ready")
 		print("ready")
 
 
@@ -61,7 +62,8 @@ def main():
 			else:
 				fivecount += 1
 
-			log(f"setSteer {Axis[config['CS']]}")
+			if config['OL']:
+				log(f"setSteer {Axis[config['CS']]}")
 			setSteer(Axis[config['CS']])
 
 			armDisarm(Axis)
@@ -78,23 +80,28 @@ def setupPi():
 	createLogfile(config['OLB'])
 
 	# start thread that reads the inputs from the SBUS pin
-	log("startInputScanner...")
+	if config['OL']:
+		log("startInputScanner...")
 	startInputScanner(config['GSB'])
 
 	# start thread that reads the distance to the front
-	log("startDistanceScanner...")
+	if config['OL']:
+		log("startDistanceScanner...")
 	startDistanceScanner(config['GDT'], config['GDE'])
 
 	# read config with calibration values
-	log("readMinMax...")
+	if config['OL']:
+		log("readMinMax...")
 	readMinMax()
 
 	# prepare the right GPIO pin for the servo motor
-	log("setupSteerPin...")
+	if config['OL']:
+		log("setupSteerPin...")
 	setupSteerPin(config['GS'], config['OMnP'], config['OMxP'])
 
 	# prepare the right GPIO pin for the brushless motor
-	log("setupSpeedMotor...")
+	if config['OL']:
+		log("setupSpeedMotor...")
 	setupSpeedMotor(config['GT'])
 
 def checkModeSwitcher(Axis):
@@ -104,19 +111,22 @@ def checkModeSwitcher(Axis):
 		# switch mode
 		if not mode == 1:
 			mode = 1
-			log(f"switched to mode {mode}")
+			if config['OL']:
+				log(f"switched to mode {mode}")
 			print(f"switched to mode {mode}")
 	elif config['M2']['Mn'] <= Axis[config['CM']] <= config['M2']['Mx']:
 		# switch mode
 		if not mode == 2:
 			mode = 2
-			log(f"switched to mode {mode}")
+			if config['OL']:
+				log(f"switched to mode {mode}")
 			print(f"switched to mode {mode}")
 	elif config['M3']['Mn'] <= Axis[config['CM']] <= config['M3']['Mx']:
 		# switch mode
 		if not mode == 3:
 			mode = 3
-			log(f"switched to mode {mode}")
+			if config['OL']:
+				log(f"switched to mode {mode}")
 			print(f"switched to mode {mode}")
 
 def armDisarm(Axis):
@@ -126,12 +136,14 @@ def armDisarm(Axis):
 	# arm the car when the throttle is down and the arm switch is fliped
 	if not armed and config['CAMn'] <= Axis[config['CA']] <= config['CAMx'] and Axis[config['CT']] <= config['OMT']:
 		armed = True
-		log("armed")
+		if config['OL']:
+			log("armed")
 		print("armed")
 	# disarm when switch is fliped to the 0 position
 	elif armed and Axis[config['CA']] <= config['CAMn']:
 		armed = False
-		log("disarmed")
+		if config['OL']:
+			log("disarmed")
 		print("disarmed")
 
 def controllSpeed(Axis, distance):
@@ -168,7 +180,8 @@ def controllSpeed(Axis, distance):
 		setSpeed(speed)
 		tmpDisarmSpeed = speed
 
-		log(f"setSpeed {tmpDisarmSpeed}")
+		if config['OL']:
+			log(f"setSpeed {tmpDisarmSpeed}")
 	else:
 		# slow disarming to prevend from damaging the motor
 		tmpDisarmSpeed = ((tmpDisarmSpeed - 1000) * 0.7) + 1000
@@ -177,7 +190,8 @@ def controllSpeed(Axis, distance):
 		if tmpDisarmSpeed <= 1050:
 			tmpDisarmSpeed = 1000
 
-		log(f"setSpeed {tmpDisarmSpeed}")
+		if config['OL']:
+			log(f"setSpeed {tmpDisarmSpeed}")
 
 		setSpeed(tmpDisarmSpeed)
 
