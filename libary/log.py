@@ -30,7 +30,7 @@ def log(message):
 		for i in logbuffer:
 			f.write(f"{i}\n")
 
-		print("logfile written")
+		#print("logfile written")
 		f.close()
 		logbuffer = []
 		logcount = 0

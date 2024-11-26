@@ -169,11 +169,6 @@ def controllSpeed(Axis, distance):
 		tmpDisarmSpeed = speed
 
 		log(f"setSpeed {tmpDisarmSpeed}")
-		print(tmpDisarmSpeed)
-		print(speedLimit)
-		print(speedMulti)
-		print(distance)
-		print("--------")
 	else:
 		# slow disarming to prevend from damaging the motor
 		tmpDisarmSpeed = ((tmpDisarmSpeed - 1000) * 0.7) + 1000
