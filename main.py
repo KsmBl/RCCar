@@ -45,6 +45,7 @@ def main():
 		# all prepare work is done
 		if config['OL']:
 			log("ready")
+
 		print("ready")
 
 
@@ -72,6 +73,7 @@ def main():
 	except KeyboardInterrupt:
 		sys.exit()
 
+# configure everything and read the config file
 def setupPi():
 	global config
 	config = getConfig()
@@ -158,7 +160,6 @@ def controllSpeed(Axis, distance):
 		speed = ((Axis[config['CT']] - 1000) * config[f"M{mode}"]['S']) + 1000
 
 		if config[f"M{mode}"]['D'] == 1:
-			# TODO if to close, limit throttle
 			if distance <= 30: # cm
 				speedMulti = (distance * 3) / 100
 
